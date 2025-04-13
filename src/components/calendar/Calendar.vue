@@ -1,4 +1,6 @@
 <script setup>
+import { ref } from 'vue';
+
 import { ScheduleXCalendar } from '@schedule-x/vue'
 import {
     createCalendar,
@@ -8,170 +10,151 @@ import {
     createViewWeek,
 } from '@schedule-x/calendar'
 import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop'
+import { createEventModalPlugin } from '@schedule-x/event-modal'
+import { createEventsServicePlugin } from '@schedule-x/events-service'
+const eventModal = createEventModalPlugin()
+const eventsService = createEventsServicePlugin({
+    backgroundEvents: [],
+});
 import '@schedule-x/theme-default/dist/index.css'
+import CreateEvent from './CreateEvent.vue'
 import { shallowRef } from 'vue'
+import './styles/main.scss'
 
-const config = {
-    isDark: false,
-}
+const isCreateEventOpen = ref(false);
+const selectedEvent = ref(null);
+
+const initialEvents = [];
+
+const handleSaveEvent = (eventData) => {
+    if (selectedEvent.value) {
+        const updatedEvent = {
+            ...selectedEvent.value,
+            title: eventData.title,
+            start: eventData.dateStart,
+            end: eventData.dateEnd,
+            color: eventData.color
+        };
+        eventsService.update(updatedEvent);
+    } else {
+        const newEvent = {
+            id: Date.now(),
+            title: eventData.title,
+            start: eventData.dateStart,
+            end: eventData.dateEnd,
+            color: eventData.color
+        };
+        eventsService.add(newEvent);
+    }
+
+    updateBackgroundEvents(); 
+    isCreateEventOpen.value = false;
+    selectedEvent.value = null;
+};
+
+const handleEditEvent = (event) => {
+    selectedEvent.value = event;
+    isCreateEventOpen.value = true;
+};
+
+const handleDeleteEvent = (eventId) => {
+  const eventToRemove = eventsService.getAll().find(e => e.id === eventId);
+  if (eventToRemove) {
+    eventsService.remove(eventToRemove);
+    updateBackgroundEvents();
+  } else {
+    console.warn('Event not found:', eventId);
+  }
+};
+
+const updateBackgroundEvents = () => {
+    const allEvents = eventsService.getAll();
+    const backgroundEvents = allEvents.map(event => ({
+        start: event.start,
+        end: event.end,
+        color: event.color
+    }));
+    eventsService.setBackgroundEvents(backgroundEvents);
+};
+
 // Do not use a ref here, as the calendar instance is not reactive, and doing so might cause issues
-// For updating events, use the events service plugin
-
-const selectedDate = new Date().toISOString().split('T')[0]
+const selectedDate = new Date().toISOString().split('T')[0];
 const calendarApp = shallowRef(createCalendar({
-    selectedDate: selectedDate,
-    // selectedDate: '2023-12-19',
+    selectedDate: new Date().toISOString().split('T')[0],
     views: [
         createViewDay(),
         createViewWeek(),
         createViewMonthGrid(),
         createViewMonthAgenda(),
     ],
-    plugins: [createDragAndDropPlugin()],
+    config: {
+        isDark: false,
+    },
+    plugins: [createDragAndDropPlugin(), eventModal, eventsService],
     defaultView: createViewMonthGrid().name,
-    events: [
-        {
-            id: 1,
-            title: 'Event 1',
-            start: '2025-04-19',
-            end: '2025-04-19',
+    events: initialEvents,
+    callbacks: {
+        onEventClick: (event) => {
+            handleEditEvent(event);
         },
-        {
-            id: 2,
-            title: 'Event 2',
-            start: '2025-04-20 12:00',
-            end: '2025-04-20 13:00',
+        onClickDate: (date) => {
+            selectedEvent.value = null;
+            isCreateEventOpen.value = true;
         },
-    ],
-}))
+        onEventDrop: (event) => {
+            eventsService.update(event);
+            updateBackgroundEvents();
+        }
+    },
+}));
+
+initialEvents.forEach(event => {
+    eventsService.add(event);
+});
+updateBackgroundEvents();
 </script>
 
 <template>
     <div class="calendar-container">
+        <CreateEvent v-if="isCreateEventOpen" :event="selectedEvent" @save-event="handleSaveEvent"
+            @close-create-event="isCreateEventOpen = false" />
         <ScheduleXCalendar :calendar-app="calendarApp">
-            <!-- <template #headerContent>
-                <slot name="headerContentLeftAppend">
-                    
-                </slot>
-                <div class="selected-date">
-                    tode{{calendarApp.selectedDate}}
-                </div>
-                
-            </template> -->
             <template #timeGridEvent="{ calendarEvent }">
-                <div class="event">
+                <div class="event" :style="{ backgroundColor: calendarEvent.color }">
                     {{ calendarEvent.title }}
+                    <button class="delete-event" @click.stop="handleDeleteEvent(calendarEvent.id)">
+                        ×
+                    </button>
                 </div>
             </template>
         </ScheduleXCalendar>
-        <!-- <ScheduleXCalendar :calendar-app="calendarApp" /> -->
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .calendar-container {
-    .sx-vue-calendar-wrapper {
-        width: 100%;
-        // max-width: 1170px;
-        min-height: 859px;
-        border: unset;
-
-        box-shadow: 0px 2px 6px #0000000A;
-    }
-
-    .sx__calendar {
-        border: unset;
-        box-shadow: unset;
-        border-radius: 0;
-    }
-
-    .sx__calendar-header {
-        position: relative;
-        display: inline-flex;
-        flex-grow: 1;
-    }
-
-    .sx__range-heading {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translate(-50%, -100%);
-        font-size: 18px;
-        color: #4D4F5C;
-
-    }
-
-    .sx__calendar-header-content:nth-child(1) {
-        border: 1px solid #D7DAE2;
+    .event {
+        padding: 4px 8px;
         border-radius: 4px;
-        padding: 0;
-        box-shadow: 0px 2px 3px #0000000D;
-        border: 1px solid #D7DAE2;
-        gap: 0;
-        font-size: 13px;
-        color: #4D4F5C;
-    }
+        color: white;
+        position: relative;
 
-    .sx__calendar-header .sx__today-button {
-        border: unset
-    }
-
-
-    .sx__today-button.sx__ripple{
-        height: 32px;
-        border-radius: 50%;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-    .sx__forward-backward-navigation {
-        border: unset;
-        display: flex;
-        align-items: stretch;
-        justify-content: flex-start;
-        gap: 0;
-
-        button {
-            position: relative;
-            width: 58px;
-            padding: 0;
-            border-left: 1px solid #D7DAE2;
-            border-radius: 0;
-
-            &:hover{
-                background-color: #47425b16;
-            }
-        }
-
-        button::after {
+        .delete-event {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            color: #4D4F5C;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+            right: 4px;
+            top: 4px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            line-height: 1;
 
-        i {
-            display: none;
-        }
-
-        .sx__chevron-wrapper.sx__ripple {
-            &:nth-child(1)::after {
-                content: 'Back';
-            }
-
-            &:nth-child(2)::after {
-                content: 'Next';
+            &:hover {
+                opacity: 0.8;
             }
         }
-    }
-
-    .sx__today-button.sx__ripple {
-        //   display: none;
     }
 }
 </style>
