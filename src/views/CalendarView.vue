@@ -1,4 +1,5 @@
 <script setup>
+import Calendar from '@/components/calendar/Calendar.vue'
 </script>
 
 <template>
@@ -8,7 +9,7 @@
         <h1>Calendar</h1>
       </div>
       <div class="main-content">
-        <h1>Calendar</h1>
+        <Calendar />
       </div>
     </section>
   </main>

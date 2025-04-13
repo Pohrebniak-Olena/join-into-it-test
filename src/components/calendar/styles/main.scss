@@ -1,0 +1,279 @@
+.calendar-container {
+    .sx-vue-calendar-wrapper {
+        width: 100%;
+        // max-width: 1170px;
+        min-height: 859px;
+        border: unset;
+
+        box-shadow: 0px 2px 6px #0000000A;
+    }
+
+    .sx__calendar {
+        border: unset;
+        box-shadow: unset;
+        border-radius: 0;
+    }
+
+    .sx__calendar-header {
+        position: relative;
+        display: inline-flex;
+        flex-grow: 1;
+    }
+
+    .sx__range-heading {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, -100%);
+        font-size: 18px;
+        color: #4D4F5C;
+
+    }
+
+    .sx__calendar-header-content:nth-child(1) {
+        border: 1px solid #D7DAE2;
+        border-radius: 4px;
+        padding: 0;
+        box-shadow: 0px 2px 3px #0000000D;
+        border: 1px solid #D7DAE2;
+        gap: 0;
+        font-size: 13px;
+        color: #4D4F5C;
+        display: inline-flex;
+        height: 32px;
+
+
+        .sx__calendar-header .sx__today-button {
+            border: unset
+        }
+
+
+        .sx__today-button.sx__ripple {
+            height: 32px;
+            border-radius: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border: none;
+            color: #3B86FF;
+        }
+
+        .sx__chevron-wrapper {
+            min-height: 100%;
+        }
+
+        .sx__forward-backward-navigation {
+            border: unset;
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: 0;
+            height: 100%;
+
+            button {
+                position: relative;
+                width: 58px;
+                padding: 0;
+                border-left: 1px solid #D7DAE2;
+                border-radius: 0;
+                height: 100%;
+
+                &:hover {
+                    background-color: #47425b16;
+                }
+            }
+
+            button::after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                color: #4D4F5C;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            i {
+                display: none;
+            }
+
+            .sx__chevron-wrapper.sx__ripple {
+                &:nth-child(1)::after {
+                    content: 'Back';
+                }
+
+                &:nth-child(2)::after {
+                    content: 'Next';
+                }
+            }
+        }
+
+        .sx__today-button.sx__ripple {
+            //   display: none;
+        }
+    }
+
+
+    .sx__month-grid-day__header-day-name {
+        background-color: #F5F6FA;
+        color: #A3A6B4;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        height: 45px;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 11px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(-100%);
+    }
+
+
+    .sx__month-grid-wrapper {
+        padding-top: 45px;
+    }
+
+
+
+    .sx__month-grid-day {
+        padding: 0 !important;
+        height: 135px;
+        border-inline-end: 1px solid #EAF0F4;
+    }
+
+    .sx__view-container {
+        padding: 20px;
+    }
+
+    .sx__month-grid-wrapper {
+        border: 1px solid var(--sx-border);
+
+        --sx-border: #EAF0F4;
+    }
+
+    .sx__month-grid-day__header {
+        width: 100%;
+        border-radius: 0;
+        text-align: end;
+
+        &-date {
+            padding: 17px 14px;
+            font-size: 15px;
+            color: #43425D;
+            font-weight: 500;
+            width: 100%;
+            border-radius: 0;
+            justify-content: flex-end;
+        }
+    }
+
+    .sx__is-today {
+        background-color: #F5F6FA;
+    }
+
+}
+
+.calendar-create-event {
+    box-shadow: 0px 3px 18px #00000029;
+    border: 1px solid #43425D;
+    border-radius: 10px;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    padding: 20px;
+    background-color: #fff;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    label {
+        color: #D6D6D6;
+        padding-bottom: 4px;
+        font-size: 10px;
+    }
+
+    input:placeholder {
+        color: #d6d6d600;
+    }
+
+    input {
+        border-bottom: 1px solid #D6D6D6;
+        display: inline-flex;
+        min-width: 1px;
+        width: 100%;
+        padding: 10px 0;
+
+        &[type="color"] {
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            border: unset;
+            gap: 20px;
+            margin-left: 20px;
+            border-radius: 100%;
+            
+        }
+    }
+
+    &_form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &_footer {
+        display: inline-flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: space-between;
+        font-size: 15px;
+
+        button {
+            border: unset;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #6a699629;
+            }
+        }
+    }
+}
+
+
+
+
+.btn-cancel {
+    color: #FF5F5F;
+}
+
+.btn-save {
+    color: #6A6996;
+}
+
+.dp__main input{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.calendar-create-event_close{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    border: unset;
+    background-color: unset;
+    cursor: pointer;
+    font-size: 20px;
+    color: #43425D;
+    font-weight: 500;
+    
+}
