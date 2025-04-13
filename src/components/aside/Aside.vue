@@ -111,6 +111,8 @@ aside {
                 font-size: 15px;
                 color: #fff;
                 position: relative;
+                cursor: pointer;
+                transition: background-color 0.25s ease-in;
 
                 &:before {
                     content: '';
@@ -121,6 +123,10 @@ aside {
                     left: 0;
                     top: 0;
                     transition: width 0.25s ease-in;
+                }
+
+                &:not(.router-link-active, .router-link-exact-active):hover{
+                    background-color: #0000000e;
                 }
 
                 &.router-link-active,
