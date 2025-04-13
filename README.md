@@ -1,14 +1,23 @@
 # join-into-it-test
 
-This template should help get you started developing with Vue 3 in Vite.
+# Calendar Event Manager
 
-## Recommended IDE Setup
+This is a calendar application built with Vue 3 and Vite using the [ScheduleX](https://docs.schedule-x.dev/) library.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## ✨ Features
 
-## Customize configuration
+- 📅 Full calendar layout with day, week, and month views
+- 📝 Add, edit events
+- 📦 Drag & drop functionality for events
+- 📆 Navigate between months, weeks, and days
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 🛠 Tech Stack
+
+- Vue 3
+- Vite
+- ScheduleX
+- Vue Date Picker (`@vuepic/vue-datepicker`)
+
 
 ## Project Setup
 
