@@ -1,5 +1,5 @@
-@import '../font/font.css';
-@import 'reset.scss';
+@use '../font/font.css';
+@use 'reset.scss';
 
 html {
     font-family: 'Source Sans Pro', sans-serif;
