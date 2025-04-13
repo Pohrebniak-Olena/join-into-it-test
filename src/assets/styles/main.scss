@@ -1,0 +1,23 @@
+@import '../font/font.css';
+@import 'reset.scss';
+
+html {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main-header{
+    width: 100%;
+    margin-bottom: 32px;
+
+    h1{
+        font-size: 28px;
+        color: #43425D;
+    }
+}
+
